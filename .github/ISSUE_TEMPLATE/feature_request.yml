@@ -1,0 +1,29 @@
+name: Feature request
+description: Suggest something for MacMedic
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What pain point are you solving? Keep it specific to Intel/EOL Macs.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What should MacMedic do?
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: Must work without admin rights by default
+        - label: Must stay lightweight (small memory/CPU footprint)
+        - label: Destructive actions require explicit confirmation
+    validations:
+      required: false

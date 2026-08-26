@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Lint
+        run: ruff check macmedic tests MacMedic.py setup.py
+      - name: Format check
+        run: ruff format --check macmedic tests MacMedic.py setup.py
+      - name: Type check
+        run: mypy macmedic
+      - name: Compile check
+        run: python -m compileall -q macmedic tests MacMedic.py setup.py
+      - name: Run tests
+        run: python -m pytest -q

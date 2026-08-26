@@ -1,0 +1,29 @@
+# Python / virtualenv
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Build / packaging output
+build/
+dist/
+release/
+
+# Lint / type / test caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# App runtime data (kept in ~/Library, never in the repo)
+*.db
+*.log
+macmedic.log
+
+# Secrets / environment
+.env
+*.secret
+
+# OS cruft
+.DS_Store
+.AppleDouble

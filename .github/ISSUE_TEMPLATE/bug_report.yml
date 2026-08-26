@@ -1,0 +1,51 @@
+name: Bug report
+description: Something is broken or misreported
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: e.g. macOS 15.7.7 (Sequoia)
+    validations:
+      required: true
+  - type: dropdown
+    id: chip
+    attributes:
+      label: Hardware
+      options:
+        - Intel (2014–2020 era)
+        - Intel (other)
+        - Apple Silicon
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: MacMedic version
+      placeholder: e.g. 0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Relevant log output
+      description: Paste the relevant section of ~/Library/Logs/MacMedic.log
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open the menu ...\n2. Click ...\n3. ..."
+    validations:
+      required: true
