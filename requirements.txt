@@ -6,6 +6,8 @@ psutil>=5.9.0
 py2app>=0.28
 
 # Development / tests / lint
-pytest>=7.0
-ruff>=0.5
-mypy>=1.10
+# Pinned to exact versions: these govern the CI lint/type/test gates, and an
+# unpinned ruff silently floating to a stricter release is what last broke CI.
+pytest==9.1.1
+ruff==0.16.5
+mypy==2.3.1

@@ -209,9 +209,7 @@ class MacMedicApp(rumps.App):
     def _open_menu(self, sender) -> None:
         if self._nsmenu is None:
             return
-        self._nsmenu.popUpMenu_positionItem_atLocation_inView_(
-            None, NSMakePoint(0, NSHeight(sender.bounds())), sender
-        )
+        self._nsmenu.popUpMenu_positionItem_atLocation_inView_(None, NSMakePoint(0, NSHeight(sender.bounds())), sender)
 
     def _toggle_panel(self, sender) -> None:
         if self._popover is None or panel is None:
