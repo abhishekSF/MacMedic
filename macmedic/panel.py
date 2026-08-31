@@ -27,8 +27,8 @@ from AppKit import (
     NSPopoverBehaviorTransient,
     NSScrollView,
     NSSlider,
-    NSTextField,
     NSStackView,
+    NSTextField,
     NSView,
     NSViewController,
     NSVisualEffectMaterialPopover,
@@ -92,9 +92,7 @@ class _Bar(NSView):
         fill_w = max(0.0, min(rect.size.width, rect.size.width * self._progress))
         if fill_w > 0:
             fill_rect = NSMakeRect(rect.origin.x, rect.origin.y, fill_w, rect.size.height)
-            fill_path = NSBezierPath.bezierPathWithRoundedRect_xRadius_yRadius_(
-                fill_rect, radius, radius
-            )
+            fill_path = NSBezierPath.bezierPathWithRoundedRect_xRadius_yRadius_(fill_rect, radius, radius)
             self._color.setFill()
             fill_path.fill()
 
@@ -124,9 +122,7 @@ class _Pill(NSView):
         self.setNeedsDisplay_(True)
 
     def layout(self):
-        self._tf.setFrame_(
-            NSMakeRect(0, 1, self.bounds().size.width, self.bounds().size.height - 2)
-        )
+        self._tf.setFrame_(NSMakeRect(0, 1, self.bounds().size.width, self.bounds().size.height - 2))
 
     def drawRect_(self, rect):
         NSColor.clearColor().setFill()
@@ -238,12 +234,8 @@ class PanelView(NSVisualEffectView):
         inner = WIDTH - pad * 2
 
         # Header
-        self._title = self._add(
-            _label("MacMedic", 16, NSColor.labelColor(), bold=True), pad, 14, 180, 22
-        )
-        self._health_pill = self._add(
-            _Pill.alloc().initWithFrame_(NSZeroRect), pad + inner - 96, 12, 96, 24
-        )
+        self._title = self._add(_label("MacMedic", 16, NSColor.labelColor(), bold=True), pad, 14, 180, 22)
+        self._health_pill = self._add(_Pill.alloc().initWithFrame_(NSZeroRect), pad + inner - 96, 12, 96, 24)
 
         # Tiles
         tile_y = 54
@@ -253,9 +245,7 @@ class PanelView(NSVisualEffectView):
         for i, name in enumerate(tile_labels):
             x = pad + i * (tile_w + 8)
             lab = self._add(_label(name, 11, NSColor.secondaryLabelColor()), x, tile_y, tile_w, 14)
-            val = self._add(
-                _label("—", 22, NSColor.labelColor(), bold=True), x, tile_y + 16, tile_w, 28
-            )
+            val = self._add(_label("—", 22, NSColor.labelColor(), bold=True), x, tile_y + 16, tile_w, 28)
             self._tiles.append({"label": lab, "value": val})
 
         # Section: Hardware
@@ -264,12 +254,8 @@ class PanelView(NSVisualEffectView):
 
         row1 = sec_y + 18
         self._add(_label("CPU", 12, NSColor.secondaryLabelColor()), pad, row1, 40, 16)
-        self._cpu_pct = self._add(
-            _label("0%", 12, NSColor.labelColor()), pad + inner - 48, row1, 48, 16
-        )
-        self._cpu_bar = self._add(
-            _Bar.alloc().initWithFrame_(NSZeroRect), pad + 44, row1, inner - 44 - 52, 10
-        )
+        self._cpu_pct = self._add(_label("0%", 12, NSColor.labelColor()), pad + inner - 48, row1, 48, 16)
+        self._cpu_bar = self._add(_Bar.alloc().initWithFrame_(NSZeroRect), pad + 44, row1, inner - 44 - 52, 10)
         self._cpu_bar.applyColor_(NSColor.systemBlueColor())
         self._cpu_spark = self._add(
             _Sparkline.alloc().initWithFrame_(NSZeroRect), pad + 44, row1 + 14, inner - 44 - 52, 18
@@ -277,33 +263,21 @@ class PanelView(NSVisualEffectView):
 
         row2 = row1 + 40
         self._add(_label("Memory", 12, NSColor.secondaryLabelColor()), pad, row2, 56, 16)
-        self._mem_pill = self._add(
-            _Pill.alloc().initWithFrame_(NSZeroRect), pad + inner - 96, row2 - 2, 96, 20
-        )
-        self._mem_bar = self._add(
-            _Bar.alloc().initWithFrame_(NSZeroRect), pad + 60, row2, inner - 60 - 104, 10
-        )
+        self._mem_pill = self._add(_Pill.alloc().initWithFrame_(NSZeroRect), pad + inner - 96, row2 - 2, 96, 20)
+        self._mem_bar = self._add(_Bar.alloc().initWithFrame_(NSZeroRect), pad + 60, row2, inner - 60 - 104, 10)
         self._mem_bar.applyColor_(NSColor.systemIndigoColor())
 
         row3 = row2 + 34
         self._add(_label("Battery", 12, NSColor.secondaryLabelColor()), pad, row3, 60, 16)
-        self._bat_pct = self._add(
-            _label("0%", 12, NSColor.labelColor()), pad + inner - 48, row3, 48, 16
-        )
-        self._bat_bar = self._add(
-            _Bar.alloc().initWithFrame_(NSZeroRect), pad + 64, row3, inner - 64 - 52, 10
-        )
+        self._bat_pct = self._add(_label("0%", 12, NSColor.labelColor()), pad + inner - 48, row3, 48, 16)
+        self._bat_bar = self._add(_Bar.alloc().initWithFrame_(NSZeroRect), pad + 64, row3, inner - 64 - 52, 10)
         self._bat_bar.applyColor_(NSColor.systemGreenColor())
-        self._bat_info = self._add(
-            _label("", 11, NSColor.secondaryLabelColor()), pad + 64, row3 + 14, inner - 64, 14
-        )
+        self._bat_info = self._add(_label("", 11, NSColor.secondaryLabelColor()), pad + 64, row3 + 14, inner - 64, 14)
 
         # Processes
         proc_y = row3 + 44
         self._add(_label("PROCESSES", 11, NSColor.secondaryLabelColor()), pad, proc_y, inner - 60, 14)
-        self._proc_toggle = self._add(
-            NSButton.alloc().initWithFrame_(NSZeroRect), pad + inner - 56, proc_y - 3, 56, 20
-        )
+        self._proc_toggle = self._add(NSButton.alloc().initWithFrame_(NSZeroRect), pad + inner - 56, proc_y - 3, 56, 20)
         self._proc_toggle.setBezelStyle_(2)
         self._proc_toggle.setTitle_("CPU")
         self._proc_toggle.setTarget_(self)
@@ -329,14 +303,10 @@ class PanelView(NSVisualEffectView):
         # Fan
         fan_y = proc_y + 16 + 110 + 16
         self._add(_label("Fan", 12, NSColor.secondaryLabelColor()), pad, fan_y, 40, 16)
-        self._fan_auto = self._add(
-            NSButton.alloc().initWithFrame_(NSZeroRect), pad + inner - 56, fan_y - 3, 56, 22
-        )
+        self._fan_auto = self._add(NSButton.alloc().initWithFrame_(NSZeroRect), pad + inner - 56, fan_y - 3, 56, 22)
         self._fan_auto.setBezelStyle_(2)
         self._fan_auto.setTitle_("Auto")
-        self._fan_slider = self._add(
-            NSSlider.alloc().initWithFrame_(NSZeroRect), pad + 44, fan_y, inner - 44 - 64, 22
-        )
+        self._fan_slider = self._add(NSSlider.alloc().initWithFrame_(NSZeroRect), pad + 44, fan_y, inner - 44 - 64, 22)
         self._fan_slider.setMinValue_(1000.0)
         self._fan_slider.setMaxValue_(7000.0)
         self._fan_slider.setContinuous_(False)
@@ -453,9 +423,7 @@ class PanelView(NSVisualEffectView):
             self._bat_bar.applyProgress_(bat_pct / 100.0)
 
         pressure = state.get("mem_pressure", 1)
-        pcolor = {1: NSColor.systemGreenColor(), 2: NSColor.systemOrangeColor()}.get(
-            pressure, NSColor.systemRedColor()
-        )
+        pcolor = {1: NSColor.systemGreenColor(), 2: NSColor.systemOrangeColor()}.get(pressure, NSColor.systemRedColor())
         plabel = {1: "Normal", 2: "Warning", 3: "Critical", 4: "Critical"}.get(pressure, "—")
         self._mem_pill.applyText_(f"● {plabel}")
         self._mem_pill.applyColor_(pcolor)
