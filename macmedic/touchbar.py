@@ -500,12 +500,22 @@ class TouchBarHost:
 
     def __init__(self, controller: Any) -> None:
         self._controller = controller
+        self._alive = True
 
     def update(self, state: dict[str, Any]) -> None:
-        self._controller.update(state)
+        if self._alive:
+            self._controller.update(state)
 
     def teardown(self) -> None:
-        self._controller.teardown()
+        global _HOST
+        if not self._alive:
+            return
+        self._alive = False
+        try:
+            self._controller.teardown()
+        finally:
+            if _HOST is self:
+                _HOST = None
 
 
 def install(
