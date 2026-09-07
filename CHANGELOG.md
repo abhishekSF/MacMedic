@@ -4,6 +4,16 @@ All notable changes to MacMedic are documented here.
 
 ## [Unreleased]
 
+### Added
+- **Touch Bar widget** on compatible MacBook Pros (2016–2020, including the
+  2020 13-inch Intel). A tiny Control Strip chip shows live CPU percent,
+  colour-coded to the same warn/crit thresholds as the menu bar. Tap it to
+  expand a system-modal bar with CPU, RAM, package temp, fan RPM, and the
+  health score. The widget is a silent no-op on machines without a Touch Bar
+  (detected via `hw.model` + `TouchBarServer`). Toggle from the right-click
+  menu, or set `touchbar.enabled` to `false` in config.json. See
+  `macmedic/touchbar.py`.
+
 ### Changed
 - **Left-click now opens a real Vorssaint-style panel** instead of the text
   dropdown. The panel is a custom `NSPopover` over an `NSVisualEffectView`

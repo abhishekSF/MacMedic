@@ -50,6 +50,12 @@ except Exception as exc:  # pragma: no cover - panel needs a UI environment
     logging.debug("panel unavailable: %s", exc)
     panel = None  # type: ignore
 
+try:
+    from . import touchbar
+except Exception as exc:  # pragma: no cover - touchbar needs AppKit
+    logging.debug("touchbar unavailable: %s", exc)
+    touchbar = None  # type: ignore
+
 from . import __version__, config, debloat, smc, trends
 from .launchagents import (
     DISABLED_DIR,
@@ -148,6 +154,9 @@ class MacMedicApp(rumps.App):
         self._last_alert_time = 0.0
         self._last_trend_time = 0.0
         self._machine_label = self._detect_machine()
+        self._touchbar: Any = None
+        self._touchbar_tried = False
+        self._tb_item: Any = None
         self._build_menu()
         self._refresh_health()
         self._panel_view: Any = None
@@ -293,6 +302,10 @@ class MacMedicApp(rumps.App):
         self.menu.add(agents_menu)
         self.menu.add(rumps.separator)
         self.menu.add(rumps.MenuItem("About MacMedic", callback=self._show_about))
+        if touchbar is not None and touchbar.available():
+            self._tb_item = rumps.MenuItem("Touch Bar Widget", callback=self._toggle_touchbar)
+            self._tb_item.state = bool(config.get("touchbar.enabled", True))
+            self.menu.add(self._tb_item)
         self.menu.add(rumps.separator)
         self.menu.add(rumps.MenuItem("Quit", callback=self._quit))
 
@@ -310,6 +323,11 @@ class MacMedicApp(rumps.App):
             self._last_snap = snap
             if not self._wired:
                 self._wire_status_item()
+            if not self._touchbar_tried:
+                self._touchbar_tried = True
+                self._install_touchbar()
+            if self._touchbar is not None:
+                self._update_touchbar(snap)
             if self._popover is not None and self._popover.isShown():
                 self._update_panel(snap)
                 self._panel_view.update_processes(
@@ -746,11 +764,76 @@ class MacMedicApp(rumps.App):
             "in the background.",
         )
 
+    def _install_touchbar(self) -> None:
+        """Attach the Control Strip chip once, after rumps is running.
+
+        No-op on Macs without a Touch Bar, when the user has disabled it, or
+        when the private Control Strip API is missing. Never raises.
+        """
+        if touchbar is None or not config.get("touchbar.enabled", True):
+            return
+        try:
+            self._touchbar = touchbar.install(on_sensors=self._show_sensors, on_health=self._show_eol)
+        except Exception as exc:  # pragma: no cover - defensive
+            log.debug("touch bar install failed: %s", exc)
+            self._touchbar = None
+
+    def _update_touchbar(self, snap) -> None:
+        if self._touchbar is None:
+            return
+        try:
+            self._touchbar.update(
+                {
+                    "cpu": snap.cpu_percent,
+                    "ram": snap.memory_percent,
+                    "pressure": snap.memory_pressure,
+                    "temp": smc.cpu_temperature(),
+                    "fan": smc.fan_rpm(),
+                    "health": self._health_score,
+                    "cpu_warn": config.get_float("thresholds.cpu_warn_pct", 75.0),
+                    "cpu_crit": config.get_float("thresholds.cpu_crit_pct", 90.0),
+                    "ram_warn": config.get_float("thresholds.ram_warn_pct", 80.0),
+                    "ram_crit": config.get_float("thresholds.ram_crit_pct", 92.0),
+                    "temp_warn": config.get_float("thresholds.temp_warn_c", 85.0),
+                    "temp_crit": config.get_float("thresholds.temp_crit_c", 95.0),
+                }
+            )
+        except Exception as exc:  # pragma: no cover - defensive
+            log.debug("touch bar update failed: %s", exc)
+
+    def _toggle_touchbar(self, sender) -> None:
+        if touchbar is None:
+            return
+        if self._touchbar is not None:
+            try:
+                self._touchbar.teardown()
+            except Exception:
+                pass
+            self._touchbar = None
+            sender.state = False
+            rumps.notification("MacMedic", "Touch Bar", "Widget hidden for this session.")
+            return
+        sender.state = True
+        self._install_touchbar()
+        if self._touchbar is None:
+            sender.state = False
+            rumps.notification("MacMedic", "Touch Bar", "Could not attach the widget on this Mac.")
+        else:
+            rumps.notification("MacMedic", "Touch Bar", "Widget added to the Control Strip. Tap it to expand.")
+            if self._last_snap is not None:
+                self._update_touchbar(self._last_snap)
+
     def _quit(self, sender: object | None = None) -> None:
         try:
             self.timer.stop()
         except Exception:
             pass
+        if self._touchbar is not None:
+            try:
+                self._touchbar.teardown()
+            except Exception:
+                pass
+            self._touchbar = None
         rumps.quit_application()
 
 

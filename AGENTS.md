@@ -3,8 +3,9 @@
 ## Cursor Cloud specific instructions
 
 MacMedic is a **macOS-only menu bar app**. Its UI shell (`macmedic/app.py`,
-`macmedic/panel.py`) imports `rumps` + PyObjC (`objc`, `AppKit`, `Foundation`),
-which cannot be installed or run on the Linux Cloud VM. Do **not** try to
+`macmedic/panel.py`, `macmedic/touchbar.py`) imports `rumps` + PyObjC (`objc`,
+`AppKit`, `Foundation`), which cannot be installed or run on the Linux Cloud
+VM. Do **not** try to
 `pip install -r requirements.txt` here — `rumps`/`pyobjc`/`py2app` are macOS-only
 and will fail. The startup update script installs only the cross-platform dev
 subset (`psutil`, `pytest`, `ruff`, `mypy`) into `.venv/`.
@@ -17,8 +18,10 @@ subset (`psutil`, `pytest`, `ruff`, `mypy`) into `.venv/`.
   `None`, subprocess calls like `ioreg`/`pmset` are absent). The full test
   suite, `ruff`, and `mypy` all run.
 - Not runnable on Linux: the menu bar GUI (`python MacMedic.py` /
-  `python -m macmedic`) and the py2app release build (`scripts/build_release.sh`).
-  These require macOS.
+  `python -m macmedic`), the Touch Bar Control Strip widget
+  (`macmedic/touchbar.py` — AppKit is loaded lazily; the model list and title
+  formatters are covered by `tests/test_touchbar.py` here), and the py2app
+  release build (`scripts/build_release.sh`). These require macOS.
 
 ### Commands (run via the venv created by the update script)
 
