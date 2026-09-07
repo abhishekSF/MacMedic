@@ -43,6 +43,9 @@ DEFAULTS: dict[str, Any] = {
         "enabled": True,
         "min_interval_seconds": 300,
     },
+    "touchbar": {
+        "enabled": True,
+    },
 }
 
 LOG_FILE: str = os.path.expanduser("~/Library/Logs/MacMedic.log")

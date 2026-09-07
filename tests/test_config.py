@@ -7,6 +7,7 @@ def test_defaults_load(tmp_path):
     settings = config.load_config(str(tmp_path / "missing.json"))
     assert settings["thresholds"]["cpu_warn_pct"] == 75.0
     assert settings["alerts"]["enabled"] is True
+    assert settings["touchbar"]["enabled"] is True
 
 
 def test_deep_merge_overrides_nested(tmp_path):

@@ -65,6 +65,13 @@ old log files, and duplicate downloads (verified by content hash). It always
 presents a safe-to-delete list with sizes and **always asks for confirmation**
 before deleting anything.
 
+**Touch Bar widget** — on MacBook Pros that still have a Touch Bar (2016–2020,
+including the 2020 13-inch Intel), MacMedic places a small chip on the Control
+Strip showing live CPU percent, coloured green / orange / red to match the
+menu bar. Tap the chip to expand a system-wide bar with CPU, RAM, package
+temp, fan RPM, and the health score. On a function-key Mac the widget is
+never installed — no extra process, no extra polling.
+
 ## The menu bar UI
 
 MacMedic uses a **split interaction** so the new card UI and the full tool menu
@@ -89,6 +96,11 @@ both stay available:
 
 The status-bar text itself stays as a compact `● CPU 12%▂▅▆▇ RAM 57%` readout
 with a severity colour and a hover tooltip.
+
+On a Touch Bar Mac the Control Strip (the always-on right-hand cluster) also
+gains a **MacMedic chip**. It is independent of whichever app is frontmost,
+updates on the same 2-second poll, and can be hidden with **Touch Bar Widget**
+in the right-click menu.
 
 ## Resource footprint
 
@@ -169,6 +181,9 @@ keys you want to override; the rest fall back to defaults.
   },
   "trends": {
     "interval_seconds": 3600
+  },
+  "touchbar": {
+    "enabled": true
   }
 }
 ```
@@ -187,6 +202,7 @@ keys you want to override; the rest fall back to defaults.
 | `scan.duplicate_scan_dir` | `~/Downloads` | Directory scanned for duplicates |
 | `debloat.min_size` / `min_age_days` / `max_recent_mod_days` | `5 MB` / `30` / `14` | Orphaned App Data candidate rules |
 | `trends.interval_seconds` | `3600` | How often a battery/thermal sample is recorded |
+| `touchbar.enabled` | `true` | Show the Control Strip widget when a Touch Bar is present |
 
 A malformed config file is ignored with a warning; MacMedic always runs with
 safe defaults.
@@ -251,6 +267,7 @@ MacMedic/
 ├── macmedic/
 │   ├── app.py               # menu bar shell + polling loop + click wiring
 │   ├── panel.py             # custom Vorssaint-style NSPopover card (PyObjC)
+│   ├── touchbar.py          # Control Strip widget + system-modal bar (PyObjC)
 │   ├── monitors.py          # CPU / memory pressure / battery / thermal
 │   ├── smc.py               # AppleSMC reader via IOKit (no root)
 │   ├── processes.py         # process snapshot, ranking, quit / force-quit
@@ -260,7 +277,7 @@ MacMedic/
 │   ├── trends.py            # SQLite battery/thermal trend store
 │   ├── blocklist.py         # bloatware / telemetry blocklist
 │   └── config.py            # defaults + JSON settings loader
-└── tests/                   # unit tests (blocklist, processes, smc, config, scanner, monitors, debloat, trends)
+└── tests/                   # unit tests (blocklist, processes, smc, config, scanner, monitors, debloat, trends, touchbar)
 ```
 
 ## License
