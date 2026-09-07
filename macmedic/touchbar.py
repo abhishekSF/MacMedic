@@ -235,7 +235,7 @@ def _controller_class() -> Any:
         return _CONTROLLER_CLS
 
     import objc
-    from AppKit import (  # type: ignore[import-not-found]
+    from AppKit import (
         NSButton,
         NSColor,
         NSCustomTouchBarItem,

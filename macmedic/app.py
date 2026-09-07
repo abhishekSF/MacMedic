@@ -154,9 +154,9 @@ class MacMedicApp(rumps.App):
         self._last_alert_time = 0.0
         self._last_trend_time = 0.0
         self._machine_label = self._detect_machine()
-        self._touchbar = None
+        self._touchbar: Any = None
         self._touchbar_tried = False
-        self._tb_item = None
+        self._tb_item: Any = None
         self._build_menu()
         self._refresh_health()
         self._panel_view: Any = None
