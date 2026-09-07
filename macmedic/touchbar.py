@@ -275,9 +275,7 @@ def _controller_class() -> Any:
             bar = NSTouchBar.alloc().init()
             bar.setDelegate_(self)
             bar.setCustomizationIdentifier_(BAR_IDENT)
-            bar.setDefaultItemIdentifiers_(
-                [CPU_IDENT, RAM_IDENT, TEMP_IDENT, FAN_IDENT, FLEX_IDENT, HEALTH_IDENT]
-            )
+            bar.setDefaultItemIdentifiers_([CPU_IDENT, RAM_IDENT, TEMP_IDENT, FAN_IDENT, FLEX_IDENT, HEALTH_IDENT])
             bar.setPrincipalItemIdentifier_(CPU_IDENT)
             self._bar = bar
             self._retain.append(bar)
